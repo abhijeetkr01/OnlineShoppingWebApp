@@ -1,0 +1,79 @@
+﻿@model CartViewModel
+
+@{
+    ViewBag.Title = "Cart";
+}
+
+
+<div>
+    @if (Model.order.Any())
+    {
+        <form method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group row mt-2 float-right">
+                <div class="col-sm-12">
+                    <a asp-action="viewproducts" asp-controller="customer" class="btn btn-primary btton">Continue Shopping</a>
+                    <button type="submit" asp-action="updatecart" asp-controller="customer" class="btn btn-primary ">Update Cart</button>
+                    <button type="submit" asp-action="checkoutcart" asp-controller="customer" class="btn btn-primary ">Checkout Cart</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <table class="table text-center mt-2">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Product Id</th>
+                            <th scope="col">Product Name</th>
+                            <th scope="col">Product Image</th>
+                            <th scope="col">Unit Price</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Sub Total</th>
+                        </tr>
+                    </thead>
+                    @{
+                        int i = 0;
+                        foreach (var orderDeatils in Model.order.ToList())
+                        {
+                            @Html.HiddenFor(c => c.order[i].ProductID, new { @id = "pID" + i })
+                            @Html.HiddenFor(c => c.order[i].ProductName, new { @id = "pName" + i })
+                            @Html.HiddenFor(c => c.order[i].PhotoPath, new { @id = "pPhoto" + i })
+                            @Html.HiddenFor(c => c.order[i].UnitPrice, new { @id = "pPrice" + i })
+                            @Html.HiddenFor(c => c.order[i].SubTotal, new { @id = "pSt" + i })
+                            var photoPath = "~/ProductImage/" + (orderDeatils.PhotoPath ?? "no-image.jpg");
+                            <tbody>
+                                <tr>
+                                    <th scope="row">@(i + 1)</th>
+                                    <td>@orderDeatils.ProductID</td>
+                                    <td>@orderDeatils.ProductName</td>
+                                    <td><img class="card-img-top imageThumbnail" src="@photoPath" asp-append-version="true" alt="No-Image" /></td>
+                                    <td>@orderDeatils.UnitPrice</td>
+                                    <td>@Html.EditorFor(c => c.order[i].Quantity, new { @id = "Qnt" + i })</td>
+                                    <td>@orderDeatils.SubTotal</td>
+                                </tr>
+                            </tbody>
+                            i++;
+                        }
+                    }
+                </table>
+            </div>
+        </form>
+    }
+    else
+    {
+        <div class="text-center align-content-center">
+            <h1>No Products added to Cart.</h1>
+
+        </div>
+
+    }
+</div>
+
+@if (ViewBag.Message != null)
+{
+    <script type="text/javascript">
+
+            window.onload = function () {
+                alert("@ViewBag.Message");
+            };
+    </script>
+}

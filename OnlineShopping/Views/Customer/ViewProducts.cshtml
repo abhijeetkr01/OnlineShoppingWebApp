@@ -1,0 +1,43 @@
+﻿@model ProductModel
+
+@{
+    ViewBag.Title = "View Products";
+}
+
+@if (Model.AllProducts.Any())
+{
+    <div class="row">
+        @foreach (ProductDetails product in Model.AllProducts)
+        {
+            var photoPath = "~/ProductImage/" + (product.PhotoPath ?? "no-image.jpg");
+            <div class="col-sm-4 mt-4 text-center">
+                <div class="card" style="width: 18rem;">
+                    <img class="card-img-top imageThumbnail" src="@photoPath" asp-append-version="true" alt="No-Image" />
+                    <div class="card-body">
+                        <h5 class="card-title">@product.ProductName</h5>
+                        <p class="card-text">Cost Rs/- @product.UnitPrice only </p>
+                        <a asp-action="addtocart" asp-controller="customer" asp-route-id="@product.ProductID" class="btn btn-primary">Add to Cart</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="text-center align-content-center">
+        <h1>No Products to View.</h1>
+
+    </div>
+}
+
+
+@if (ViewBag.Message != null)
+{
+    <script type="text/javascript">
+
+            window.onload = function () {
+                alert("@ViewBag.Message");
+            };
+    </script>
+}

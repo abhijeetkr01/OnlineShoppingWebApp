@@ -1,0 +1,98 @@
+﻿@inject SignInManager<UserTypeClass> signInManager
+@inject UserManager<UserTypeClass> userManager
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/lib/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
+    <script src="~/lib/jquery/jquery.js"></script>
+    <script src="~/lib/jquery-validate/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+    <div class="container-sm">
+        <header class="fixed-top">
+            <nav class="navbar navbar-expand-sm bg-dark navbar-dark" style="height:40px;">
+                <a class="navbar-brand" asp-controller="home" asp-action="index">E-Shopping</a>
+                @if (signInManager.IsSignedIn(User))
+                {
+                    <a class="navbar-brand" asp-controller="account" asp-action="about" asp-route-id="@userManager.GetUserName(User)">About</a>
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <form method="post" asp-action="logout" asp-controller="account">
+                                <button type="submit" class="nav-link btn btn-link py-0" style="width:auto">
+                                    Logout @User.Identity.Name
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                }
+                else
+                {
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="account" asp-action="register">
+                                Sign Up
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="account" asp-action="login">
+                                Login
+                            </a>
+                        </li>
+                    </ul>
+                }
+            </nav>
+            <nav class="navbar navbar-expand-sm bg-light navbar-light" style="height:30px;">
+                @if (signInManager.IsSignedIn(User))
+                {
+                    if (userManager.GetUserName(User).Substring(0, 1) == "A")
+                    {
+                        <a class="navbar-brand" asp-controller="products" asp-action="product"><u>Products</u></a>
+                    }
+                    if (userManager.GetUserName(User).Substring(0, 1) == "C")
+                    {
+                        <a class="navbar-brand" asp-controller="customer" asp-action="viewproducts"><u>View Products</u></a>
+                        <a class="navbar-brand" asp-controller="customer" asp-action="cart"><u>Cart</u></a>
+                    }
+                }
+            </nav>
+        </header>
+
+        <div style="margin-bottom:50px; margin-top:100px;">
+            @RenderBody()
+        </div>
+        <footer>
+
+            @*<nav class="navbar fixed-bottom navbar-expand-sm bg-dark navbar-dark" style="height:40px;">
+                <nav class="navbar-brand" style="font-size:small;">
+                    <div class="container text-center">
+                        All Rights reserved.
+                        <br />
+                        XYZ Inc.
+                    </div>
+                </nav>
+            </nav>*@
+
+            <nav class="navbar fixed-bottom navbar-expand-sm bg-dark navbar-dark" role="navigation" style="height:40px;">
+                <div class="container text-center">
+                    <div class="navbar-brand col-md-12 col-sm-12 col-xs-12" style="font-size:small;">
+                        All Rights reserved.
+                        <br />
+                        XYZ Inc.
+                    </div>
+                </div>
+            </nav>
+
+        </footer>
+
+        @if (IsSectionDefined("Scripts"))
+        {
+            @RenderSection("Scripts", required: false);
+        }
+    </div>
+</body>
+</html>
